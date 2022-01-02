@@ -1,0 +1,53 @@
+name: ci-tests
+
+on:
+  push:
+    branches:
+      - {{ default_branch }}
+    tags:
+      - "*"
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  build:
+    runs-on: {% raw %}${{ matrix.os }}{% endraw %}
+    strategy:
+      fail-fast: false
+      matrix:
+        name:
+          - "linting"
+{%- for p in platforms %}
+{%- for v in python_versions %}
+          - "{{p}}-py{{ v|replace('.', '') }}"
+{%- endfor %}
+{%- endfor %}
+
+        include:
+          - name: "linting"
+            python: "3.8"
+            os: ubuntu-latest
+            tox_env: "lint"
+{%- for p in platforms %}
+{%- for v in python_versions %}
+          - name: "{{p}}-py{{ v|replace('.', '') }}"
+            python: "{{v}}"
+            os: "{{p}}-latest"
+            tox_env: "py{{ v|replace('.', '') }}"
+{%- endfor %}
+{%- endfor %}
+{% raw %}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install tox virtualenv
+      - name: Test build
+        run: "tox -e ${{ matrix.tox_env }}"
+{% endraw %}

@@ -1,0 +1,3 @@
+{% if tests.type == 'pytest' %}
+pytest
+{% endif %}

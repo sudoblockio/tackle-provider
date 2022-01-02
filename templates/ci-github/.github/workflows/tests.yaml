@@ -1,0 +1,23 @@
+name: Run tests
+
+on:
+  push:
+    branches:
+      - {{ default_branch }}
+    tags:
+      - "*"
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          path: {% raw %}"${{ github.repository }}" {% endraw %}
+      - name: Install dependencies
+        run: |
+          pip install -r requirements-dev.txt
