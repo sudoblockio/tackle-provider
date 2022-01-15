@@ -6,7 +6,7 @@ project_slug:
 
 author:
   name->: input What is your name? Used in README and LICENSE
-  email->: input What is your name? Used in README and LICENSE.  Blank to leave out.
+  email->: input What is your email? Used in README and LICENSE.  Blank to leave out.
 
 repo_owner->: input What is your github / org name?
 
