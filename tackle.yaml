@@ -90,7 +90,7 @@ tests->:
         - github: Github Actions
         - circle: CircleCI
     platforms:
-      ->: select What platforms to test against?
+      ->: checkbox What platforms to test against?
       choices:
         - ubuntu
         - macos

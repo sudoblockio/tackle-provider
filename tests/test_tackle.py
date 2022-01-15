@@ -3,8 +3,10 @@ import os
 import shutil
 
 
-def test_min(change_base_dir):
+def test_default(change_base_dir):
+    """Test the default choices."""
     create = tackle(no_input=True)
-    assert os.path.exists("my-provider")
-    assert len(create["demo"]) == 0
-    shutil.rmtree("my-provider")
+    project_slug = "tackle-my-provider"
+    assert os.path.exists(project_slug)
+    assert create["project_slug"] == project_slug
+    shutil.rmtree(project_slug)
