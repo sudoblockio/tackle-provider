@@ -25,9 +25,9 @@ license->:
   type:
     ->: select License type?
     choices:
-      - apache: Apache 2.0
-      - mit: MIT
-      - closed: Closed source
+      - Apache 2.0: apache
+      - MIT: mit
+      - Closed source: closed
   readable->: "{{ license_types[type] }}"
   copyright_holder->: input Who is the copyright holder? --if "type in ['mit']"
   gen->: generate licenses/{{type}}.md {{project_slug}}/LICENSE
@@ -36,9 +36,9 @@ license->:
 tackle_file:
   ->: select What type of default tackle file do you want to start with?
   choices:
-    - code-generation.yaml: Code generation boiler plate - full project
-    - example.yaml: Contrived example of hooks and logic
-    - none: No tackle file - provider is just for hooks
+    - Code generation boiler plate - full project: code-generation.yaml
+    - Contrived example of hooks and logic: example.yaml
+    - No tackle file - provider is just for hooks: none
 tackle_file_gen_>: generate tackle-files/{{tackle_file}} {{project_slug}}/tackle.yaml
 
 # Hooks
@@ -87,8 +87,8 @@ tests->:
     type:
       ->: select What type of CI?
       choices:
-        - github: Github Actions
-        - circle: CircleCI
+        - Github Actions: github
+        - CircleCI: circle
     platforms:
       ->: checkbox What platforms to test against?
       choices:
