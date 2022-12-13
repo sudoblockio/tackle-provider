@@ -22,5 +22,5 @@ jobs:
               {"type":"feat","section":"Features","hidden":false},
               {"type":"fix","section":"Bug Fixes","hidden":false},
               {"type":"refactor","section":"Refactors","hidden":false},
-              {"type":"revert","section":"Reversions","hidden":false},
+              {"type":"revert","section":"Reversions","hidden":false}
             ]
