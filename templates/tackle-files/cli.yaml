@@ -1,0 +1,14 @@
+<-:
+  help: A CLI that does stuff
+  input_field:
+    type: str
+    default: a default
+    description: A field for...
+  hook_field:
+    type: str
+    default->: input
+    description: A field for...
+
+  return: business
+  exec:
+    business: logic

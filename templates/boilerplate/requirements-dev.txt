@@ -1,3 +1,4 @@
-{% if tests.type == 'pytest' %}
+{% if tests_enable and tests.type == 'pytest' %}
 pytest
 {% endif %}
+tackle

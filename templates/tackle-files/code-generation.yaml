@@ -6,3 +6,10 @@ project_slug:
   ->: input What do you want to call your project slug (ie the top level directory name)?
   default: "{{ project_name|lower|replace(' ', '-') }}"
 
+author->: input What is the github username?
+org->: input What is the github org?
+
+license:
+  ->: tackle robcxyz/tackle-license
+  output: {{project_slug}}
+  author: {{author}}

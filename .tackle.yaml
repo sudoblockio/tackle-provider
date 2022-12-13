@@ -1,0 +1,108 @@
+
+<-:
+  help: Create a provider
+
+  exec:
+    project_name->: input Name of your provider? Used in README.md title. --default "My Provider"
+    project_slug:
+      ->: input Name of project slug? Actual repo name.
+      default: "tackle-{{ project_name|lower|replace(' ', '-') }}"
+    description->: input A description of what the project is? --default "A tackle box provider that "
+
+    author:
+      name->: input What is your name? Used in README and LICENSE
+      email->: input What is your email? Used in README and LICENSE.  Blank to leave out.
+
+    repo_owner->: input What is your github / org name?
+
+    default_branch:
+      ->: select What is going to be your default branch name?
+      choices:
+        - main
+        - master
+
+    license:
+      ->: tackle robcxyz/tackle-license
+      output: {{project_slug}}
+      author: {{author}}
+
+    # Default tackle file
+    tackle_file:
+      ->: select What type of default tackle file do you want to start with?
+      choices:
+        - Code generation boiler plate - full project: code-generation.yaml
+        - Declarative CLI: cli.yaml
+        - No tackle file - provider is just for hooks: none
+
+    tackle_file_gen_>: generate tackle-files/{{tackle_file}} {{project_slug}}/.tackle.yaml --if "tackle_file!='none'"
+
+    # Hooks
+    hooks_enable->: confirm Do you want to setup hooks?
+    hooks->:
+      if: hooks_enable
+      type->: input What is your hook type? (Used to call hook)
+      class_name->: input What is the class name? --default "{{ type|title|replace('-', '')|replace('_', '') }}Hook"
+      gen->: generate hooks {{project_slug}}/hooks
+
+    # Tests
+    tests_enable->: confirm Do you want to generate tests?
+    tests->:
+      if: tests_enable
+      type:
+        ->: select Test type?
+        choices:
+          - pytest
+          - unittest
+
+      pytest->:
+        if: type == 'pytest'
+        conftest->: generate tests-{{type}}/conftest.py {{project_slug}}/tests/
+        tackle-file->:
+          if: tackle_file != 'none'
+          gen->: generate tests-{{type}}/test_tackle.py {{project_slug}}/tests/
+        hooks->:
+          if: hooks_enable
+          gen->: generate tests-{{type}}/test_hooks.py {{project_slug}}/tests/
+      unittest->:
+        if: type == 'unittest'
+        tackle-file->:
+          if: tackle_file != 'none'
+          gen->: generate tests-{{type}}/test_tackle.py {{project_slug}}/tests/
+        hooks->:
+          if: hooks_enable
+          gen->: generate tests-{{type}}/test_hooks.py {{project_slug}}/tests/
+
+      tox_enable->: confirm Do you want to use tox?
+      gen-tox->: generate tox.ini {{project_slug}}/tox.ini
+
+      # CI
+      ci_enable->: confirm Do you want to generate continuous integration scripts?
+      ci->:
+        if: ci_enable
+        type:
+          ->: select What type of CI?
+          choices:
+            - Github Actions: github
+            - CircleCI: circle
+        platforms:
+          ->: checkbox What platforms to test against? --if "type=='github'"
+          choices:
+            - ubuntu
+            - macos
+            - windows
+        python_versions:
+          ->: checkbox Which python versions to test against? Will run in matrix.
+          if: type == 'github'
+          checked: true
+          choices:
+            - 3.7
+            - 3.8
+            - 3.9
+            - "3.10"
+        use_foresight->: confirm Do you want to use Foresight for test telemetry?
+        gen->: generate ci-{{type}} {{project_slug}}/
+
+    gen:
+      boilerplate->: generate templates/boilerplate {{project_slug}}/
+
+#general<-:

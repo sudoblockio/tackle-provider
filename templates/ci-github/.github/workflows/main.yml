@@ -37,8 +37,15 @@ jobs:
             tox_env: "py{{ v|replace('.', '') }}"
 {%- endfor %}
 {%- endfor %}
-{% raw %}
     steps:
+{% if use_foresight %}
+      - name: Collect Workflow Telemetry
+        uses: runforesight/foresight-workflow-kit-action@v1
+        if: success() || failure()
+        with:
+          api_key: {% raw %}${{ secrets.FORESIGHT_API_KEY }}{% endraw %}
+{% endif %}
+{% raw %}
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v1
@@ -49,5 +56,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install tox virtualenv
       - name: Test build
-        run: "tox -e ${{ matrix.tox_env }}"
-{% endraw %}
+        run: "tox -e ${{ matrix.tox_env }}"{% endraw %}
+{% if use_foresight %}
+      - name: Analyze Test and/or Coverage Results
+        uses: runforesight/foresight-test-kit-action@v1
+        if: {% raw %}${{ always() }}{% endraw %}
+        with:
+          api_key: {% raw %}${{ secrets.FORESIGHT_API_KEY }}{% endraw %}
+          coverage_path: ./coverage.xml
+          coverage_format: JACOCO/XML
+          test_framework: pytest
+          test_path: ./foresight-reports/**
+          test_format: JUNIT
+{% endif %}

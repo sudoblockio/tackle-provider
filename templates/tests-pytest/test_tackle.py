@@ -1,36 +1,45 @@
-from tackle.main import tackle
-import os
-import yaml
+from tackle import tackle
+
+{% if tackle_file == 'code-generation.yaml' %}
+def test_default(
+        change_base_dir,
+        assert_paths,
+        change_dir,{% if tests_enable and tests.type == 'pytest' %}
+        test_pytest_output, {% else %}test_unittest_output, {% endif %}
+        cleanup_path,
+):
+    """Test the default choices."""
+    overrides = {
+        "project_name": "output",
+        "project_slug": "output",
+        "author": "foo",
+        "org": "bar",
+        "license": "",  # Disables prompting for license
+    }
+
+    tackle(no_input=True, override=overrides)
+
+    assert_paths([
+        'README.md',
+        'requirements-dev.txt',
+        '.pre-commit-config.yaml',
+    ], ".")
+
+    cleanup_path("output")
 
 
-def test_min(change_base_dir, fixture_dir):
-    fixture = os.path.join(fixture_dir, "min.yaml")
-    with open(fixture) as f:
-        fixture_dict = yaml.safe_load(f)
-    create = tackle(**fixture_dict, no_input=True)
-    assert len(create["demo"]) == 0
+{% endif %}{% if tackle_file == 'cli.yaml' %}
+def test_default(
+        change_base_dir,
+):
+    """Test the default choices."""
+    overrides = {
+        "hook_field": "foo",
+        "license": "",  # Disables prompting for license
+    }
+    output = tackle(no_input=True, override=overrides)
 
+    assert output
 
-def test_monty(change_base_dir, fixture_dir):
-    fixture = os.path.join(fixture_dir, "monty.yaml")
-    create = tackle(overwrite_inputs=fixture, no_input=True)
-    assert len(create["demo"]) == 1
-    assert create["do_demo"][0]["name"] == "stuff"
+{% endif %}
 
-
-def test_providers(change_base_dir, fixture_dir):
-    fixture = os.path.join(fixture_dir, "providers.yaml")
-    create = tackle(overwrite_inputs=fixture, no_input=True)
-    assert len(create["demo"]) == 1
-
-
-def test_jinja(change_base_dir, fixture_dir):
-    fixture = os.path.join(fixture_dir, "jinja.yaml")
-    create = tackle(overwrite_inputs=fixture, no_input=True)
-    assert len(create["demo"]) == 1
-
-
-def test_embedded(change_base_dir, fixture_dir):
-    fixture = os.path.join(fixture_dir, "embedded.yaml")
-    create = tackle(overwrite_inputs=fixture, no_input=True)
-    assert len(create["demo"]) == 1

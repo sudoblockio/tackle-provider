@@ -8,10 +8,11 @@ repos:
         args: [] # optional: list of Conventional Commits types to allow
 
   - repo: https://github.com/python/black.git
-    rev: 21.4b2
+    rev: 22.3.0
     hooks:
       - id: black
         language_version: python3
+        exclude: templates
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v3.4.0
@@ -23,14 +24,4 @@ repos:
       - id: check-executables-have-shebangs
       - id: check-merge-conflict
       - id: check-symlinks
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.9.1
-    hooks:
-      - id: flake8
-        args:
-          - '--ignore=D106,D102,D107,E501,W503,D400,D205,E203,D100'
-          - '--exclude=.git,__pycache__,docs,build,dist,tests/main/fixtures/hooks-abort-render/hooks'
-        additional_dependencies:
-          - flake8-absolute-import
-          - flake8-black
-          - flake8-docstrings
+

@@ -22,4 +22,4 @@ make test
 
 ### License
 
-[{{ license.readable }}](LICENSE)
+[{{ license }}](LICENSE)
