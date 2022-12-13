@@ -85,7 +85,7 @@
             - Github Actions: github
             - CircleCI: circle
         platforms:
-          ->: checkbox What platforms to test against? --if "type=='github'"
+          ->: checkbox What platforms to test against? --if "type=='github'" --checked
           choices:
             - ubuntu
             - macos
