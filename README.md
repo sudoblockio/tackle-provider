@@ -37,14 +37,8 @@ tackle sudoblockio/tackle-provider
 ? What is your hook type? (Used to call hook) stuff
 ? What is the class name? StuffHook
 ? Do you want to generate tests? Yes
-? Test type?
-❯ pytest
-  unittest
 ? Do you want to use tox? Yes
 ? Do you want to generate continuous integration scripts? Yes
-? What type of CI?
-❯ Github Actions
-  CircleCI
 ? What platforms to test against?
   ◉ ubuntu
   ◉ macos
@@ -57,6 +51,12 @@ tackle sudoblockio/tackle-provider
 ? Do you want to use Foresight for test telemetry? Yes
 ```
 
+### TTD
+
+- [ ] Make github action into provider
+- [ ] Make badges into provider
+- [ ] Modularize the calls and improve testing
+- [ ] Use naming provider?
 
 ### License
 

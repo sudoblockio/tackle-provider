@@ -4,8 +4,8 @@ from tackle import tackle
 def test_default(
         change_base_dir,
         assert_paths,
-        change_dir,{% if tests_enable and tests.type == 'pytest' %}
-        test_pytest_output, {% else %}test_unittest_output, {% endif %}
+        change_dir,{% if tests_enable %}
+        test_pytest_output,{% endif %}
         cleanup_path,
 ):
     """Test the default choices."""

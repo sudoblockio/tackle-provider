@@ -1,4 +1,5 @@
-{% if tests_enable and tests.type == 'pytest' %}
 pytest
-{% endif %}
 tackle
+{% if tests_enable and tests.tox_enable %}
+tox
+{% endif %}

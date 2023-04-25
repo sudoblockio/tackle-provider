@@ -1,4 +1,3 @@
-
 <-:
   help: Create a provider
 
@@ -11,20 +10,11 @@
 
     author:
       name->: input What is your name? Used in README and LICENSE
-      email->: input What is your email? Used in README and LICENSE.  Blank to leave out.
+      email->: input What is your email? Blank to leave out.
 
     repo_owner->: input What is your github / org name?
-
-    default_branch:
-      ->: select What is going to be your default branch name?
-      choices:
-        - main
-        - master
-
-    license:
-      ->: tackle robcxyz/tackle-license
-      output: {{project_slug}}
-      author: {{author}}
+    default_branch->: select --choices ['main','master']
+    license->: tackle sudoblockio/tackle-license --output {{project_slug}} --author {{author.name}}
 
     # Default tackle file
     tackle_file:
@@ -48,29 +38,14 @@
     tests_enable->: confirm Do you want to generate tests?
     tests->:
       if: tests_enable
-      type:
-        ->: select Test type?
-        choices:
-          - pytest
-          - unittest
-
-      pytest->:
-        if: type == 'pytest'
-        conftest->: generate tests-{{type}}/conftest.py {{project_slug}}/tests/
-        tackle-file->:
-          if: tackle_file != 'none'
-          gen->: generate tests-{{type}}/test_tackle.py {{project_slug}}/tests/
-        hooks->:
-          if: hooks_enable
-          gen->: generate tests-{{type}}/test_hooks.py {{project_slug}}/tests/
-      unittest->:
-        if: type == 'unittest'
-        tackle-file->:
-          if: tackle_file != 'none'
-          gen->: generate tests-{{type}}/test_tackle.py {{project_slug}}/tests/
-        hooks->:
-          if: hooks_enable
-          gen->: generate tests-{{type}}/test_hooks.py {{project_slug}}/tests/
+      conftest->: generate tests-pytest/conftest.py {{project_slug}}/tests/
+      tackle-file->:
+        if: tackle_file != 'none'
+        gen->: generate tests-pytest/test_tackle.py {{project_slug}}/tests/
+      hooks->:
+        if: hooks_enable
+        gen tests->: generate tests-pytest/test_hooks.py {{project_slug}}/tests/
+        gen hook fixtures->: generate tests-pytest/fixtures {{project_slug}}/tests/fixtures
 
       tox_enable->: confirm Do you want to use tox?
       gen-tox->: generate tox.ini {{project_slug}}/tox.ini
@@ -79,20 +54,14 @@
       ci_enable->: confirm Do you want to generate continuous integration scripts?
       ci->:
         if: ci_enable
-        type:
-          ->: select What type of CI?
-          choices:
-            - Github Actions: github
-            - CircleCI: circle
         platforms:
-          ->: checkbox What platforms to test against? --if "type=='github'" --checked
+          ->: checkbox What platforms to test against? --checked
           choices:
             - ubuntu
             - macos
             - windows
         python_versions:
           ->: checkbox Which python versions to test against? Will run in matrix.
-          if: type == 'github'
           checked: true
           choices:
             - 3.7
@@ -100,9 +69,10 @@
             - 3.9
             - "3.10"
         use_foresight->: confirm Do you want to use Foresight for test telemetry?
-        gen->: generate ci-{{type}} {{project_slug}}/
+        gen->: generate ci-github {{project_slug}}/
 
     gen:
       boilerplate->: generate templates/boilerplate {{project_slug}}/
 
-#general<-:
+#
+#gen_ci<-:

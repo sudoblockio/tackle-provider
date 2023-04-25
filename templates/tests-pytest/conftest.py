@@ -1,4 +1,3 @@
-{% if tests.type == 'pytest' %}
 import os
 import shutil
 import sys
@@ -96,5 +95,4 @@ def cleanup_path():
             shutil.rmtree(path)
 
     return f
-{% endif %}
 {% endif %}
