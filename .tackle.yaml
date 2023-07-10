@@ -1,49 +1,77 @@
 <-:
   help: Create a provider
-  exec:
-    project_slug:
+
+  project_slug:
+    type: str
+    default:
       ->: input Name of project slug? Actual repo name.
       default: "tackle-"
-    project_name:
+
+  project_name:
+    type: str
+    default:
       ->: input Name of your provider? Used in README.md title.
       default: "{{ project_slug|title|replace('-', ' ')}}"
-    description:
+
+  description:
+    type: str
+    default:
       ->: input A description of what the project is?
       default: "A tackle box provider that "
 
-    author:
-      name->: input What is your name? Used in README and LICENSE
-      email->: input What is your email? Blank to leave out.
+  author_name:
+    type: str
+    default->: input What is your name? Used in README and LICENSE
 
-    repo_owner:
+  author_email:
+    type: str
+    default->: input What is your email? Blank to leave out.
+
+  repo_owner:
+    type: str
+    default:
       ->: input What is your github / org name?
-      default: "{{project_name}}"
-    default_branch->: select --choices ['main','master']
-    license:
-      ->: tackle sudoblockio/tackle-license
-      output: "{{project_slug}}"
-      author: "{{author.project_name}}"
+      default: "{{author_name}}"
 
-    # Default tackle file
-    tackle_file:
+  default_branch:
+    type: str
+    default->: select --choices ['main','master']
+
+  tackle_file:
+    type: str
+    default:
       ->: select What type of default tackle file do you want to start with?
       choices:
         - Code generation boiler plate - full project: code-generation.yaml
         - Declarative CLI: cli.yaml
         - No tackle file - provider is just for hooks: none
 
+  hooks_enable:
+    type: str
+    default->: confirm Do you want to setup hooks?
+
+  tests_enable:
+    type: str
+    default->: confirm Do you want to generate tests?
+
+  exec:
+    # Generate license
+    license:
+      ->: tackle sudoblockio/tackle-license
+      output: "{{project_slug}}"
+      author: "{{author_name}}"
+
+    # Generate tackle file
     tackle_file_gen_>: generate tackle-files/{{tackle_file}} {{project_slug}}/.tackle.yaml --if "tackle_file!='none'"
 
-    # Hooks
-    hooks_enable->: confirm Do you want to setup hooks?
+    # Generate hooks
     hooks->:
       if: hooks_enable
       type->: input What is your hook type? (Used to call hook)
       class_name->: input What is the class name? --default "{{ type|title|replace('-', '')|replace('_', '') }}Hook"
       gen->: generate hooks {{project_slug}}/hooks
 
-    # Tests
-    tests_enable->: confirm Do you want to generate tests?
+    # Generate tests
     tests->:
       if: tests_enable
       conftest->: generate tests-pytest/conftest.py {{project_slug}}/tests/
@@ -78,5 +106,6 @@
         use_foresight->: confirm Do you want to use Foresight for test telemetry?
         gen->: generate ci-github {{project_slug}}/
 
+    # Generate boilerplate
     gen:
       boilerplate->: generate templates/boilerplate {{project_slug}}/

@@ -1,10 +1,29 @@
 from tackle import tackle
 import os
 
-BASE_OVERRIDES = {
+KWARGS: dict = {
     "project_name": "output",
     "project_slug": "output",
-    "license": "",
+    "description": "foo and bar",
+    "author_name": "me",
+    "author_email": "me@you.com",
+    "repo_owner": "sudoblockio",
+    "default_branch": "main",
+    "tests_enable": False,
+}
+
+OVERRIDES: dict = {
+    "license": "",  # Snub the license module since it is external
+}
+
+TEST_OVERRIDES = {
+    "tests": {
+        "tox_enable": True,
+        "ci_enable": True,
+        "ci": [
+            "3.9",
+        ],
+    }
 }
 
 
@@ -16,20 +35,23 @@ def test_default(
     cleanup_output,
 ):
     """Test the default choices."""
-    overrides = {
+    kwargs = {
         "tackle_file": "none",
         "hooks_enable": False,
         "tests_enable": False,
     }
-    overrides.update(BASE_OVERRIDES)
-    tackle(no_input=True, override=overrides)
+    overrides = {}
+    KWARGS.update(kwargs)
+    OVERRIDES.update(overrides)
+
+    tackle(**KWARGS, no_input=True, override=OVERRIDES)
     assert_paths(
         [
             "README.md",
             "requirements-dev.txt",
             ".pre-commit-config.yaml",
         ],
-        overrides["project_slug"],
+        KWARGS["project_slug"],
     )
 
 
@@ -40,12 +62,15 @@ def test_cli(
     test_pytest_output,
 ):
     """Test creating a CLI app."""
-    overrides = {
+    kwargs = {
         "tackle_file": "cli.yaml",
         "hooks_enable": False,
+        "tests_enable": True,
     }
-    overrides.update(BASE_OVERRIDES)
-    tackle(no_input=True, override=overrides)
+    KWARGS.update(kwargs)
+    OVERRIDES.update(TEST_OVERRIDES)
+
+    tackle(**KWARGS, override=OVERRIDES)
     test_pytest_output("output")
     assert_paths(
         [
@@ -63,13 +88,17 @@ def test_code_gen(
     test_pytest_output,
 ):
     """Test creating a code generator."""
-    overrides = {
+    kwargs = {
         "tackle_file": "code-generation.yaml",
         "hooks_enable": False,
+        "tests_enable": True,
     }
-    overrides.update(BASE_OVERRIDES)
-    tackle(no_input=True, override=overrides)
+    KWARGS.update(kwargs)
+    OVERRIDES.update(TEST_OVERRIDES)
+
+    tackle(**KWARGS, no_input=True, override=OVERRIDES)
     test_pytest_output("output")
+
     assert_paths(
         [
             os.path.join("tests", "conftest.py"),
@@ -86,16 +115,23 @@ def test_no_tackle(
     test_pytest_output,
 ):
     """Test creating a bare provider with only hooks."""
-    overrides = {
+    kwargs = {
         "tackle_file": "none",
         "hooks_enable": True,
+        "tests_enable": True,
+    }
+    overrides = {
         "hooks": {
             "type": "thing",
         },
     }
-    overrides.update(BASE_OVERRIDES)
-    tackle(no_input=True, override=overrides)
+    KWARGS.update(kwargs)
+    OVERRIDES.update(overrides)
+    OVERRIDES.update(TEST_OVERRIDES)
+
+    tackle(**KWARGS, no_input=True, override=OVERRIDES)
     test_pytest_output("output")
+
     assert_paths(
         [
             os.path.join("tests", "conftest.py"),
