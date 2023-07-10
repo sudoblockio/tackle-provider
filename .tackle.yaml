@@ -1,5 +1,5 @@
 <-:
-  help: Create a provider
+  help: Create a tackle provider with tests and a CI.
 
   project_slug:
     type: str
