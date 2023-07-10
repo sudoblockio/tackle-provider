@@ -1,20 +1,28 @@
 <-:
   help: Create a provider
-
   exec:
-    project_name->: input Name of your provider? Used in README.md title. --default "My Provider"
     project_slug:
       ->: input Name of project slug? Actual repo name.
-      default: "tackle-{{ project_name|lower|replace(' ', '-') }}"
-    description->: input A description of what the project is? --default "A tackle box provider that "
+      default: "tackle-"
+    project_name:
+      ->: input Name of your provider? Used in README.md title.
+      default: "{{ project_slug|title|replace('-', ' ')}}"
+    description:
+      ->: input A description of what the project is?
+      default: "A tackle box provider that "
 
     author:
       name->: input What is your name? Used in README and LICENSE
       email->: input What is your email? Blank to leave out.
 
-    repo_owner->: input What is your github / org name?
+    repo_owner:
+      ->: input What is your github / org name?
+      default: "{{project_name}}"
     default_branch->: select --choices ['main','master']
-    license->: tackle sudoblockio/tackle-license --output {{project_slug}} --author {{author.name}}
+    license:
+      ->: tackle sudoblockio/tackle-license
+      output: "{{project_slug}}"
+      author: "{{author.project_name}}"
 
     # Default tackle file
     tackle_file:
@@ -64,15 +72,11 @@
           ->: checkbox Which python versions to test against? Will run in matrix.
           checked: true
           choices:
-            - 3.7
-            - 3.8
-            - 3.9
+            - "3.9"
             - "3.10"
+            - "3.11"
         use_foresight->: confirm Do you want to use Foresight for test telemetry?
         gen->: generate ci-github {{project_slug}}/
 
     gen:
       boilerplate->: generate templates/boilerplate {{project_slug}}/
-
-#
-#gen_ci<-:
