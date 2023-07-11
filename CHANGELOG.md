@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.0](https://github.com/sudoblockio/tackle-provider/compare/v0.0.2...v0.1.0) (2023-07-10)
+
+
+### Features
+
+* move almost all prompts up to top level - need to fix with tackle/[#127](https://github.com/sudoblockio/tackle-provider/issues/127) ([a3a4e79](https://github.com/sudoblockio/tackle-provider/commit/a3a4e7961b699d7b0fac92e6380ee6edc0912465))
+
 ## [0.0.2](https://github.com/sudoblockio/tackle-provider/compare/v0.0.1...v0.0.2) (2023-07-10)
 
 
