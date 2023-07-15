@@ -103,7 +103,6 @@
             - "3.9"
             - "3.10"
             - "3.11"
-        use_foresight->: confirm Do you want to use Foresight for test telemetry?
         gen->: generate ci-github {{project_slug}}/
 
     # Generate boilerplate
