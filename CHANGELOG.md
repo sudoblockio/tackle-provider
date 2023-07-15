@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/sudoblockio/tackle-provider/compare/v0.1.0...v0.1.1) (2023-07-15)
+
+
+### Bug Fixes
+
+* rm foresight - rip ([c633ffd](https://github.com/sudoblockio/tackle-provider/commit/c633ffd09cccb2fc635069ffac4011f575a548e7))
+
 ## [0.1.0](https://github.com/sudoblockio/tackle-provider/compare/v0.0.2...v0.1.0) (2023-07-10)
 
 
